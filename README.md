@@ -7,3 +7,7 @@ So, nofox is a BF intepreter for now.
 ## Status
 
 **_Work In Progress_**
+
+## Reference
+
+- Esolang page: <https://esolangs.org/wiki/Brainfuck>
