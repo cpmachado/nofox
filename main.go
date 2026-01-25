@@ -6,6 +6,8 @@ import (
 	"io"
 	"log"
 	"os"
+
+	"github.com/cpmachado/nofox/lex"
 )
 
 func main() {
@@ -35,17 +37,17 @@ func main() {
 
 	for ip := 0; ip < len(program); ip++ {
 		switch c := program[ip]; c {
-		case '>':
+		case lex.TokenMoveRight:
 			ptr++
-		case '<':
+		case lex.TokenMoveLeft:
 			ptr--
-		case '+':
+		case lex.TokenIncrement:
 			tape[ptr]++
-		case '-':
+		case lex.TokenDecrement:
 			tape[ptr]--
-		case '.':
+		case lex.TokenPrint:
 			fmt.Printf("%c", tape[ptr])
-		case ',':
+		case lex.TokenRead:
 			_, err := os.Stdin.Read(b)
 			if err != nil {
 				if err != io.EOF {
@@ -55,7 +57,7 @@ func main() {
 			} else {
 				tape[ptr] = b[0]
 			}
-		case '[':
+		case lex.TokenLoopStart:
 			if tape[ptr] == 0 {
 				k := 0
 				for program[ip] != ']' && k != 0 {
@@ -70,10 +72,10 @@ func main() {
 			} else {
 				stack = append(stack, ip)
 			}
-		case ']':
+		case lex.TokenLoopEnd:
 			n := len(stack)
 			if n == 0 {
-				log.Fatalf("Expected [ to precede closure at %d", ip)
+				log.Fatalf("expected '[' to precede closure at %d", ip)
 			}
 			k := stack[n-1]
 			if tape[ptr] > 0 {
@@ -85,34 +87,18 @@ func main() {
 	}
 }
 
-func loadProgram(r io.Reader) ([]rune, error) {
-	var program []rune
+func loadProgram(r io.Reader) ([]lex.Token, error) {
+	var program []lex.Token
 
-	buf, err := io.ReadAll(r)
+	lexChannel := make(chan lex.Token)
+
+	err := lex.Lex(r, lexChannel)
 	if err != nil {
 		return nil, err
 	}
 
-	// read program
-	for _, c := range string(buf) {
-		switch c {
-		case '>':
-			program = append(program, c)
-		case '<':
-			program = append(program, c)
-		case '+':
-			program = append(program, c)
-		case '-':
-			program = append(program, c)
-		case '.':
-			program = append(program, c)
-		case ',':
-			program = append(program, c)
-		case '[':
-			program = append(program, c)
-		case ']':
-			program = append(program, c)
-		}
+	for c := <-lexChannel; c != lex.TokenEOF; c = <-lexChannel {
+		program = append(program, c)
 	}
 
 	return program, nil
