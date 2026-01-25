@@ -1,4 +1,4 @@
-MAIN=./cmd/nofox
+MAIN=.
 TAG_VERSION=$(shell git describe --tags --exact-match 2>/dev/null || git rev-parse --short HEAD)
 VERSION=$(subst /,_,$(TAG_VERSION))
 
