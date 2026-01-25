@@ -9,15 +9,15 @@ import (
 type VM struct {
 	tape   []byte
 	ptr    int
-	Input  io.Reader
-	Writer io.Writer
+	input  io.Reader
+	writer io.Writer
 }
 
 func NewVM(tapesize int, input io.Reader, writer io.Writer) *VM {
 	return &VM{
 		tape:   make([]byte, tapesize),
-		Input:  input,
-		Writer: writer,
+		input:  input,
+		writer: writer,
 	}
 }
 
@@ -49,7 +49,7 @@ func (v *VM) Execute(p AST) error {
 			}
 		case NodeTypeRead:
 			b := make([]byte, 1)
-			_, err := v.Input.Read(b)
+			_, err := v.input.Read(b)
 			if err != nil {
 				if err != io.EOF {
 					return err
@@ -59,7 +59,7 @@ func (v *VM) Execute(p AST) error {
 				v.tape[v.ptr] = b[0]
 			}
 		case NodeTypePrint:
-			fmt.Fprintf(v.Writer, "%c", v.tape[v.ptr])
+			fmt.Fprintf(v.writer, "%c", v.tape[v.ptr])
 		}
 	}
 	return nil
