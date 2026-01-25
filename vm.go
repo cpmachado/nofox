@@ -13,6 +13,14 @@ type VM struct {
 	Writer io.Writer
 }
 
+func NewVM(tapesize int, input io.Reader, writer io.Writer) *VM {
+	return &VM{
+		tape:   make([]byte, tapesize),
+		Input:  input,
+		Writer: writer,
+	}
+}
+
 func (v *VM) Execute(p AST) error {
 	for _, ins := range p {
 		switch ins.Type() {
