@@ -87,10 +87,10 @@ func main() {
 	}
 }
 
-func loadProgram(r io.Reader) ([]lex.TokenType, error) {
-	var program []lex.TokenType
+func loadProgram(r io.Reader) ([]lex.Token, error) {
+	var program []lex.Token
 
-	lexChannel := make(chan lex.TokenType)
+	lexChannel := make(chan lex.Token)
 
 	err := lex.Lex(r, lexChannel)
 	if err != nil {

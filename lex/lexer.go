@@ -2,10 +2,10 @@ package lex
 
 import "io"
 
-type TokenType int
+type Token int
 
 const (
-	TokenEOF TokenType = iota
+	TokenEOF Token = iota
 	TokenMoveRight
 	TokenMoveLeft
 	TokenIncrement
@@ -16,7 +16,7 @@ const (
 	TokenLoopEnd
 )
 
-var DefaultMapping = map[rune]TokenType{
+var DefaultMapping = map[rune]Token{
 	'>': TokenMoveRight,
 	'<': TokenMoveLeft,
 	'+': TokenIncrement,
@@ -27,7 +27,7 @@ var DefaultMapping = map[rune]TokenType{
 	']': TokenLoopEnd,
 }
 
-func Lex(r io.Reader, emitter chan TokenType) error {
+func Lex(r io.Reader, emitter chan Token) error {
 	buf, err := io.ReadAll(r)
 	if err != nil {
 		return err
