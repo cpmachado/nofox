@@ -6,7 +6,21 @@ So, nofox is a bf intepreter for now.
 
 ## Status
 
-**_Work In Progress_**
+- Minimal implementation.
+
+## Usage:
+
+```shell
+./nofox -f samples/hello.bf
+Hello World!
+```
+
+```shell
+$ ./nofox -h
+Usage of ./nofox:
+  -f string
+    	bf script to load
+```
 
 ## Reference
 
