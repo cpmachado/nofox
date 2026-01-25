@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -9,6 +10,55 @@ import (
 
 	"github.com/cpmachado/nofox"
 )
+
+type VM struct {
+	tape []byte
+	ptr  int
+}
+
+func (v *VM) Execute(p nofox.AST) error {
+	for _, ins := range p {
+		switch ins.Type() {
+		case nofox.NodeTypeMove:
+			nmove, ok := ins.(*nofox.NodeMove)
+			if !ok {
+				return errors.New("invalid node")
+			}
+			v.ptr += nmove.Value
+		case nofox.NodeTypeIncrement:
+			ninc, ok := ins.(*nofox.NodeIncrement)
+			if !ok {
+				return errors.New("invalid node")
+			}
+			v.tape[v.ptr] += byte(ninc.Value)
+		case nofox.NodeTypeLoop:
+			nloop, ok := ins.(*nofox.NodeLoop)
+			if !ok {
+				return errors.New("invalid node")
+			}
+			for v.tape[v.ptr] > 0 {
+				err := v.Execute(nloop.Nodes)
+				if err != nil {
+					return err
+				}
+			}
+		case nofox.NodeTypeRead:
+			b := make([]byte, 1)
+			_, err := os.Stdin.Read(b)
+			if err != nil {
+				if err != io.EOF {
+					return err
+				}
+				v.tape[v.ptr] = 0
+			} else {
+				v.tape[v.ptr] = b[0]
+			}
+		case nofox.NodeTypePrint:
+			fmt.Printf("%c", v.tape[v.ptr])
+		}
+	}
+	return nil
+}
 
 func main() {
 	filename := ""
