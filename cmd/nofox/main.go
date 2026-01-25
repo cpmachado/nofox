@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/cpmachado/nofox/lex"
+	"github.com/cpmachado/nofox"
 )
 
 func main() {
@@ -37,17 +37,17 @@ func main() {
 
 	for ip := 0; ip < len(program); ip++ {
 		switch c := program[ip]; c {
-		case lex.TokenMoveRight:
+		case nofox.TokenMoveRight:
 			ptr++
-		case lex.TokenMoveLeft:
+		case nofox.TokenMoveLeft:
 			ptr--
-		case lex.TokenIncrement:
+		case nofox.TokenIncrement:
 			tape[ptr]++
-		case lex.TokenDecrement:
+		case nofox.TokenDecrement:
 			tape[ptr]--
-		case lex.TokenPrint:
+		case nofox.TokenPrint:
 			fmt.Printf("%c", tape[ptr])
-		case lex.TokenRead:
+		case nofox.TokenRead:
 			_, err := os.Stdin.Read(b)
 			if err != nil {
 				if err != io.EOF {
@@ -57,7 +57,7 @@ func main() {
 			} else {
 				tape[ptr] = b[0]
 			}
-		case lex.TokenLoopStart:
+		case nofox.TokenLoopStart:
 			if tape[ptr] == 0 {
 				k := 0
 				for program[ip] != ']' && k != 0 {
@@ -72,7 +72,7 @@ func main() {
 			} else {
 				stack = append(stack, ip)
 			}
-		case lex.TokenLoopEnd:
+		case nofox.TokenLoopEnd:
 			n := len(stack)
 			if n == 0 {
 				log.Fatalf("expected '[' to precede closure at %d", ip)
@@ -87,17 +87,17 @@ func main() {
 	}
 }
 
-func loadProgram(r io.Reader) ([]lex.Token, error) {
-	var program []lex.Token
+func loadProgram(r io.Reader) ([]nofox.Token, error) {
+	var program []nofox.Token
 
-	lexChannel := make(chan lex.Token)
+	nofoxChannel := make(chan nofox.Token)
 
-	err := lex.Lex(r, lexChannel)
+	err := nofox.Lex(r, nofoxChannel)
 	if err != nil {
 		return nil, err
 	}
 
-	for c := <-lexChannel; c != lex.TokenEOF; c = <-lexChannel {
+	for c := <-nofoxChannel; c != nofox.TokenEOF; c = <-nofoxChannel {
 		program = append(program, c)
 	}
 
