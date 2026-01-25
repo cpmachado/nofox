@@ -67,7 +67,6 @@ func main() {
 				}
 			} else {
 				stack = append(stack, ip)
-				//	slog.Info("open", slog.Int("ip", ip))
 			}
 		case ']':
 			n := len(stack)
