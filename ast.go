@@ -1,5 +1,46 @@
 package nofox
 
+import "errors"
+
+var (
+	ErrLoopEnd        = errors.New("received loop end")
+	ErrMissingLoopEnd = errors.New("missing loop end")
+)
+
+func Parse(token chan Token) (AST, error) {
+	var base AST
+
+	for tok := <-token; tok != TokenEOF; tok = <-token {
+		var curr Node
+
+		switch tok {
+		case TokenMoveRight:
+			curr = &NodeMove{Value: 1}
+		case TokenMoveLeft:
+			curr = &NodeMove{Value: -1}
+		case TokenIncrement:
+			curr = &NodeIncrement{Value: 1}
+		case TokenDecrement:
+			curr = &NodeIncrement{Value: -1}
+		case TokenPrint:
+			curr = &NodePrint{}
+		case TokenRead:
+			curr = &NodeRead{}
+		case TokenLoopStart:
+			nodes, err := Parse(token)
+			if err != ErrLoopEnd {
+				return nil, ErrMissingLoopEnd
+			}
+			curr = &NodeLoop{Nodes: nodes}
+		case TokenLoopEnd:
+			return base, ErrLoopEnd
+		}
+		base = append(base, curr)
+	}
+
+	return base, nil
+}
+
 type AST []Node
 
 type NodeType int
