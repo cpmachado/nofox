@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Tokens defined by a lexer
+- Parser implements very rudimentary ast
+- AST, lexer and VM exposed at root package
 
 ### Changed
 
 - Moved main.go to ./cmd/nofox/
+- Code executed by a vm
 
 ## [0.0.1] - 2026-01-25
 
