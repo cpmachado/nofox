@@ -38,7 +38,48 @@ func Parse(token chan Token) (AST, error) {
 		base = append(base, curr)
 	}
 
-	return base, nil
+	return optimise(base), nil
+}
+
+// just collapse move and increments
+func optimise(base AST) AST {
+	var ret AST
+
+	if len(base) == 0 {
+		return ret
+	}
+
+	curr := base[0]
+
+	for _, node := range base[1:] {
+		if curr != nil && node.Type() != curr.Type() {
+			ret = append(ret, curr)
+			curr = nil
+		} else {
+			switch v := node.(type) {
+			case *NodeMove:
+				if curr == nil {
+					curr = &NodeMove{Value: v.Value}
+					break
+				}
+				k, _ := curr.(*NodeMove)
+				k.Value += v.Value
+			case *NodeIncrement:
+				if curr == nil {
+					curr = &NodeIncrement{Value: v.Value}
+					break
+				}
+				k, _ := curr.(*NodeIncrement)
+				k.Value += v.Value
+			case *NodeLoop:
+				optimised := optimise(v.Nodes)
+				ret = append(ret, &NodeLoop{Nodes: optimised})
+				curr = nil
+			}
+		}
+	}
+
+	return ret
 }
 
 type AST []Node
