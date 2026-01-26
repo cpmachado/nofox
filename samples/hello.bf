@@ -1,2 +1,2 @@
-# Sample from esolang https://esolangs.org/wiki/Brainfuck
+# Sample from esolang https://esolangs dot org/wiki/Brainfuck
 ++++++++[>++++[>++>+++>+++>+<<<<-]>+>+>->>+[<]<-]>>.>---.+++++++..+++.>>.<-.<.+++.------.--------.>>+.>++.
