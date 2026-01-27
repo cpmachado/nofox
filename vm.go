@@ -57,34 +57,22 @@ func NewVM[T Int](tapesize int, input io.Reader, output io.Writer) (VM[T], error
 
 func (v *defaultVM[T]) Execute(p AST) error {
 	for _, ins := range p {
-		switch ins.Type() {
-		case NodeTypeMove:
-			nmove, ok := ins.(*NodeMove)
-			if !ok {
-				return ErrInvalidNode
-			}
-			v.ptr += nmove.Value
-		case NodeTypeIncrement:
+		switch k := ins.(type) {
+		case *NodeMove:
+			v.ptr += k.Value
+		case *NodeIncrement:
 			if !v.WithinTape(v.ptr) {
 				return ErrInvalidMemoryAccess
 			}
-			ninc, ok := ins.(*NodeIncrement)
-			if !ok {
-				return ErrInvalidNode
-			}
-			v.tape[v.ptr] += T(ninc.Value)
-		case NodeTypeLoop:
-			nloop, ok := ins.(*NodeLoop)
-			if !ok {
-				return ErrInvalidNode
-			}
+			v.tape[v.ptr] += T(k.Value)
+		case *NodeLoop:
 			for v.tape[v.ptr] > 0 {
-				err := v.Execute(nloop.Nodes)
+				err := v.Execute(k.Nodes)
 				if err != nil {
 					return err
 				}
 			}
-		case NodeTypeRead:
+		case *NodeRead:
 			if !v.WithinTape(v.ptr) {
 				return ErrInvalidMemoryAccess
 			}
@@ -98,7 +86,7 @@ func (v *defaultVM[T]) Execute(p AST) error {
 			} else {
 				v.tape[v.ptr] = T(b[0])
 			}
-		case NodeTypePrint:
+		case *NodePrint:
 			x, found := v.ValueAt(v.ptr)
 
 			if !found {
