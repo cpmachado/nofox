@@ -67,7 +67,7 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				v.tape[v.ptr] = T(b[0])
 			}
 		case NodeTypePrint:
-			fmt.Fprintf(v.writer, "%c", rune(v.tape[v.ptr]))
+			_, _ = fmt.Fprintf(v.writer, "%c", rune(v.tape[v.ptr]))
 		}
 	}
 	return nil
