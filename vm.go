@@ -23,12 +23,15 @@ type defaultVM[T Int] struct {
 	writer io.Writer
 }
 
-func NewVM[T Int](tapesize int, input io.Reader, writer io.Writer) VM[T] {
+func NewVM[T Int](tapesize int, input io.Reader, writer io.Writer) (VM[T], error) {
+	if tapesize <= 0 {
+		return nil, errors.New("invalid tape size")
+	}
 	return &defaultVM[T]{
 		tape:   make([]T, tapesize),
 		input:  input,
 		writer: writer,
-	}
+	}, nil
 }
 
 func (v *defaultVM[T]) Execute(p AST) error {
