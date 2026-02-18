@@ -1,7 +1,6 @@
 package nofox
 
 import (
-	"errors"
 	"fmt"
 	"io"
 )
@@ -25,7 +24,13 @@ type defaultVM[T Int] struct {
 
 func NewVM[T Int](tapesize int, input io.Reader, writer io.Writer) (VM[T], error) {
 	if tapesize <= 0 {
-		return nil, errors.New("invalid tape size")
+		return nil, ErrInvalidTapeSize
+	}
+	if input == nil {
+		return nil, ErrInvalidInput
+	}
+	if writer == nil {
+		return nil, ErrInvalidOutput
 	}
 	return &defaultVM[T]{
 		tape:   make([]T, tapesize),
@@ -40,19 +45,19 @@ func (v *defaultVM[T]) Execute(p AST) error {
 		case NodeTypeMove:
 			nmove, ok := ins.(*NodeMove)
 			if !ok {
-				return errors.New("invalid node")
+				return ErrInvalidNode
 			}
 			v.ptr += nmove.Value
 		case NodeTypeIncrement:
 			ninc, ok := ins.(*NodeIncrement)
 			if !ok {
-				return errors.New("invalid node")
+				return ErrInvalidNode
 			}
 			v.tape[v.ptr] += T(ninc.Value)
 		case NodeTypeLoop:
 			nloop, ok := ins.(*NodeLoop)
 			if !ok {
-				return errors.New("invalid node")
+				return ErrInvalidNode
 			}
 			for v.tape[v.ptr] > 0 {
 				err := v.Execute(nloop.Nodes)
