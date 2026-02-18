@@ -6,22 +6,28 @@ import (
 	"io"
 )
 
-type VM struct {
-	tape   []byte
+type Int interface{ int64 | int | byte }
+
+type VM[T Int] interface {
+	Execute(program AST) error
+}
+
+type defaultVM[T Int] struct {
+	tape   []T
 	ptr    int
 	input  io.Reader
 	writer io.Writer
 }
 
-func NewVM(tapesize int, input io.Reader, writer io.Writer) *VM {
-	return &VM{
-		tape:   make([]byte, tapesize),
+func NewVM[T Int](tapesize int, input io.Reader, writer io.Writer) VM[T] {
+	return &defaultVM[T]{
+		tape:   make([]T, tapesize),
 		input:  input,
 		writer: writer,
 	}
 }
 
-func (v *VM) Execute(p AST) error {
+func (v *defaultVM[T]) Execute(p AST) error {
 	for _, ins := range p {
 		switch ins.Type() {
 		case NodeTypeMove:
@@ -35,7 +41,7 @@ func (v *VM) Execute(p AST) error {
 			if !ok {
 				return errors.New("invalid node")
 			}
-			v.tape[v.ptr] += byte(ninc.Value)
+			v.tape[v.ptr] += T(ninc.Value)
 		case NodeTypeLoop:
 			nloop, ok := ins.(*NodeLoop)
 			if !ok {
@@ -56,10 +62,10 @@ func (v *VM) Execute(p AST) error {
 				}
 				v.tape[v.ptr] = 0
 			} else {
-				v.tape[v.ptr] = b[0]
+				v.tape[v.ptr] = T(b[0])
 			}
 		case NodeTypePrint:
-			fmt.Fprintf(v.writer, "%c", v.tape[v.ptr])
+			fmt.Fprintf(v.writer, "%c", rune(v.tape[v.ptr]))
 		}
 	}
 	return nil
