@@ -12,6 +12,8 @@ type VM[T Int] interface {
 	Execute(program AST) error
 	ValueAt(idx int) (v T, found bool)
 	TapeSize() int
+	Input() io.Reader
+	Output() io.Writer
 }
 
 type defaultVM[T Int] struct {
@@ -82,4 +84,12 @@ func (v *defaultVM[T]) ValueAt(idx int) (T, bool) {
 
 func (v *defaultVM[T]) TapeSize() int {
 	return len(v.tape)
+}
+
+func (v *defaultVM[T]) Input() io.Reader {
+	return v.input
+}
+
+func (v *defaultVM[T]) Output() io.Writer {
+	return v.writer
 }
