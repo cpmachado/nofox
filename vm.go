@@ -11,6 +11,7 @@ type Int interface{ int64 | int | byte }
 type VM[T Int] interface {
 	Execute(program AST) error
 	ValueAt(idx int) (v T, found bool)
+	TapeSize() int
 }
 
 type defaultVM[T Int] struct {
@@ -77,4 +78,8 @@ func (v *defaultVM[T]) ValueAt(idx int) (T, bool) {
 		return T(0), false
 	}
 	return v.tape[idx], true
+}
+
+func (v *defaultVM[T]) TapeSize() int {
+	return len(v.tape)
 }
