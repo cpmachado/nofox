@@ -101,6 +101,7 @@ func (v *defaultVM[T]) ValueAt(idx int) (T, bool) {
 	return v.tape[idx], true
 }
 
+// TapeSize returns the tape size
 func (v *defaultVM[T]) TapeSize() int {
 	return len(v.tape)
 }
