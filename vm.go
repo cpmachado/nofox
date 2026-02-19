@@ -19,23 +19,34 @@ type defaultVM[T Int] struct {
 	tape   []T
 	ptr    int
 	input  io.Reader
-	writer io.Writer
+	output io.Writer
 }
 
-func NewVM[T Int](tapesize int, input io.Reader, writer io.Writer) (VM[T], error) {
+// NewVM creates an instance of [VM]
+//   - tapesize must be a positive value
+//   - input must be not nil
+//   - output must be not nil
+//
+// If successful it returns the parametized [VM], if not it validates the
+// errors per the order of parameters.
+// Returning, if failing:
+//   - [ErrInvalidTapeSize]
+//   - [ErrInvalidInput]
+//   - [ErrInvalidOutput]
+func NewVM[T Int](tapesize int, input io.Reader, output io.Writer) (VM[T], error) {
 	if tapesize <= 0 {
 		return nil, ErrInvalidTapeSize
 	}
 	if input == nil {
 		return nil, ErrInvalidInput
 	}
-	if writer == nil {
+	if output == nil {
 		return nil, ErrInvalidOutput
 	}
 	return &defaultVM[T]{
 		tape:   make([]T, tapesize),
 		input:  input,
-		writer: writer,
+		output: output,
 	}, nil
 }
 
@@ -77,7 +88,7 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				v.tape[v.ptr] = T(b[0])
 			}
 		case NodeTypePrint:
-			_, _ = fmt.Fprintf(v.writer, "%c", rune(v.tape[v.ptr]))
+			_, _ = fmt.Fprintf(v.output, "%c", rune(v.tape[v.ptr]))
 		}
 	}
 	return nil
@@ -99,5 +110,5 @@ func (v *defaultVM[T]) Input() io.Reader {
 }
 
 func (v *defaultVM[T]) Output() io.Writer {
-	return v.writer
+	return v.output
 }
