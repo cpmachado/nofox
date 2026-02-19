@@ -29,7 +29,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	vm := nofox.NewVM(3e4, os.Stdin, os.Stdout)
+	vm, err := nofox.NewVM[int](3e4, os.Stdin, os.Stdout)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	err = vm.Execute(program)
 	if err != nil {
