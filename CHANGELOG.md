@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add version flag to display program version
+
 ## [0.0.2] - 2026-01-25
 
 ### Added
