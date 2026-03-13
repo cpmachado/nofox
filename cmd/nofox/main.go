@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"log"
 	"os"
 	"runtime/debug"
 
@@ -32,27 +31,30 @@ func main() {
 
 	switch filename {
 	case "":
-		fmt.Printf("missing file to be loaded\n")
+		fmt.Fprintln(os.Stderr, "missing file to be loaded")
 		flag.Usage()
 		os.Exit(1)
 	case "stdin":
 	default:
 		source, err = os.Open(filename)
 		if err != nil {
-			log.Fatal(err)
+			fmt.Fprintln(os.Stderr, err.Error())
+			os.Exit(1)
 		}
 	}
 
 	program, err := loadProgram(source)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 
 	vm := nofox.NewVM(3e4, os.Stdin, os.Stdout)
 
 	err = vm.Execute(program)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintln(os.Stderr, err.Error())
+		os.Exit(1)
 	}
 }
 

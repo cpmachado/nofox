@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add version flag to display program version
 - Read from stdin by default
 
+### Changed
+
+- Output to stderr via `fmt.Fprintf` like functions instead of log
+
 ## [0.0.2] - 2026-01-25
 
 ### Added
