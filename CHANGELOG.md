@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Output to stderr via `fmt.Fprintf` like functions instead of log
+- Changed Makefile run script
 
 ## [0.0.2] - 2026-01-25
 

@@ -23,7 +23,7 @@ format-check:
 	gofmt -l .
 
 run:
-	go run $(MAIN) -loglevel DEBUG
+	go run $(MAIN)
 
 test:
 	go test -v ./...
