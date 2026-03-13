@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add version flag to display program version
+- Read from stdin by default
 
 ## [0.0.2] - 2026-01-25
 
