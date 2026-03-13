@@ -12,9 +12,9 @@ import (
 )
 
 func main() {
-	filename := ""
+	filename := "stdin"
 	version := false
-	flag.StringVar(&filename, "f", "", "bf script to load")
+	flag.StringVar(&filename, "f", filename, "bf script to load")
 	flag.BoolVar(&version, "v", version, "display version")
 	flag.Parse()
 
@@ -27,17 +27,23 @@ func main() {
 		os.Exit(0)
 	}
 
-	if filename == "" {
+	var err error
+	source := os.Stdin
+
+	switch filename {
+	case "":
+		fmt.Printf("missing file to be loaded\n")
 		flag.Usage()
-		log.Fatalf("missing file to be loaded")
+		os.Exit(1)
+	case "stdin":
+	default:
+		source, err = os.Open(filename)
+		if err != nil {
+			log.Fatal(err)
+		}
 	}
 
-	file, err := os.Open(filename)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	program, err := loadProgram(file)
+	program, err := loadProgram(source)
 	if err != nil {
 		log.Fatal(err)
 	}
