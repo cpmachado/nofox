@@ -1,3 +1,3 @@
 module github.com/cpmachado/nofox
 
-go 1.26.0
+go 1.26.1
