@@ -49,7 +49,10 @@ func main() {
 		os.Exit(1)
 	}
 
-	vm := nofox.NewVM(3e4, os.Stdin, os.Stdout)
+	vm, err := nofox.NewVM[int](3e4, os.Stdin, os.Stdout)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "%s", err)
+	}
 
 	err = vm.Execute(program)
 	if err != nil {
