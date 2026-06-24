@@ -5,7 +5,11 @@ import (
 	"io"
 )
 
-type Int interface{ int64 | int | byte }
+// Interface for all int types as byte and rune are alias to uint8 and rune
+// Ref: https://go.dev/ref/spec#Numeric_types
+type Int interface {
+	uint8 | uint16 | uint32 | uint64 | int8 | int16 | int32 | int64
+}
 
 type VM[T Int] interface {
 	Execute(program AST) error
