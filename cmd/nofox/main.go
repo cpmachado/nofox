@@ -13,7 +13,9 @@ import (
 func main() {
 	filename := "stdin"
 	version := false
+	tapeSize := int(3e4)
 	flag.StringVar(&filename, "f", filename, "bf script to load")
+	flag.IntVar(&tapeSize, "l", tapeSize, "tapesize, must be a positive integer")
 	flag.BoolVar(&version, "v", version, "display version")
 	flag.Parse()
 
@@ -24,6 +26,12 @@ func main() {
 		}
 		fmt.Printf("nofox-%s\n", vsn)
 		os.Exit(0)
+	}
+
+	if tapeSize <= 0 {
+		fmt.Fprintln(os.Stderr, "invalid tapesize")
+		flag.Usage()
+		os.Exit(1)
 	}
 
 	var err error
@@ -49,7 +57,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	vm, err := nofox.NewVM[int](3e4, os.Stdin, os.Stdout)
+	vm, err := nofox.NewVM[int](tapeSize, os.Stdin, os.Stdout)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "%s", err)
 	}
