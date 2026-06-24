@@ -51,7 +51,7 @@ func main() {
 
 	vm, err := nofox.NewVM[int](3e4, os.Stdin, os.Stdout)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "%s", err)
 	}
 
 	err = vm.Execute(program)
