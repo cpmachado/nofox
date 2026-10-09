@@ -72,7 +72,12 @@ func main() {
 func loadProgram(r io.Reader) (nofox.AST, error) {
 	nofoxChannel := make(chan nofox.Token)
 
-	err := nofox.Lex(r, nofoxChannel)
+	lexer, err := nofox.NewLexer(nil, nofoxChannel)
+	if err != nil {
+		return nil, err
+	}
+
+	err = lexer.Lex(r)
 	if err != nil {
 		return nil, err
 	}

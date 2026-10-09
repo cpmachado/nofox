@@ -7,4 +7,6 @@ var (
 	ErrInvalidTapeSize = errors.New("invalid tape size")
 	ErrInvalidInput    = errors.New("invalid input")
 	ErrInvalidOutput   = errors.New("invalid output")
+
+	ErrDuplicatedToken = errors.New("duplicated token in mappings") // duplicated token
 )
