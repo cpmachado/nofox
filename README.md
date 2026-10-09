@@ -19,7 +19,10 @@ Hello World!
 $ ./nofox -h
 Usage of ./nofox:
   -f string
-    	bf script to load
+    	bf script to load (default "stdin")
+  -l int
+    	tapesize, must be a positive integer (default 30000)
+  -v	display version
 ```
 
 ## Reference
