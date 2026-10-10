@@ -7,9 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Added `Lexer` type, and enabled different mappings to use as a lib.
+- Added `-l` flag that enables custom size of tape
+
 ### Changed
 
-- Updated dependency to go v1.26.5
+- Lex migrated to be a function of Lexer
+- Updated dependency to go v1.27.2
 
 ## [0.0.3] - 2026-03-13
 
