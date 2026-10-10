@@ -1,12 +1,5 @@
 package nofox
 
-import "errors"
-
-var (
-	ErrLoopEnd        = errors.New("received loop end")
-	ErrMissingLoopEnd = errors.New("missing loop end")
-)
-
 func Parse(token chan Token) (AST, error) {
 	var base AST
 
