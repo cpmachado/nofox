@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"maps"
+	"strings"
 )
 
 // [Token] defines an enum for tokens
@@ -42,10 +43,17 @@ type Lexer struct {
 	Emitter  chan Token     // emitter of symbols
 }
 
+func (l *Lexer) String() string {
+	return fmt.Sprintf("Lexer{Mappings: %v, Emitter: %v}", l.Mappings, l.Emitter)
+}
+
 // Constructor for [Lexer]
 func NewLexer(mappings map[rune]Token, emitter chan Token) (*Lexer, error) {
 	if mappings == nil {
 		mappings = DefaultMapping
+	}
+	if emitter == nil {
+		return nil, ErrMissingEmitter
 	}
 	if err := validateMappings(mappings); err != nil {
 		return nil, err
@@ -76,10 +84,16 @@ func validateMappings(mappings map[rune]Token) error {
 		tracker[v] = true
 	}
 
+	var missing []string
+
 	for k, v := range tracker {
 		if !v {
-			return fmt.Errorf("missing token %s", k.String())
+			missing = append(missing, k.String())
 		}
+	}
+
+	if len(missing) > 0 {
+		return fmt.Errorf("missing tokens: %q", strings.Join(missing, ","))
 	}
 
 	return nil
