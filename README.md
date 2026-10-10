@@ -2,7 +2,8 @@
 
 [![build](https://github.com/cpmachado/nofox/actions/workflows/go.yml/badge.svg?branch=master)](https://github.com/cpmachado/nofox/actions/workflows/go.yml)
 
-So, nofox is a bf intepreter for now.
+So, nofox is a bf interpreter for now. The lib however already supports
+different mappings for different mappings.
 
 ## Status
 
