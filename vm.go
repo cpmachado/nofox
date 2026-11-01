@@ -65,6 +65,9 @@ func (v *defaultVM[T]) Execute(p AST) error {
 			}
 			v.ptr += nmove.Value
 		case NodeTypeIncrement:
+			if !v.WithinTape(v.ptr) {
+				return ErrInvalidMemoryAccess
+			}
 			ninc, ok := ins.(*NodeIncrement)
 			if !ok {
 				return ErrInvalidNode
@@ -83,7 +86,7 @@ func (v *defaultVM[T]) Execute(p AST) error {
 			}
 		case NodeTypeRead:
 			if !v.WithinTape(v.ptr) {
-				return ErrInvalidIO
+				return ErrInvalidMemoryAccess
 			}
 			b := make([]byte, 1)
 			_, err := v.input.Read(b)
@@ -99,7 +102,7 @@ func (v *defaultVM[T]) Execute(p AST) error {
 			x, found := v.ValueAt(v.ptr)
 
 			if !found {
-				return ErrInvalidIO
+				return ErrInvalidMemoryAccess
 			}
 
 			_, _ = fmt.Fprintf(v.output, "%c", rune(x))
