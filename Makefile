@@ -6,30 +6,34 @@ all: build
 	@echo all built
 
 build:
-	 go build $(MAIN)
+	@go build $(MAIN)
 
 clean:
 	@rm -rf nofox target
 	@echo all removed
 
 lint:
-	golangci-lint run ./...
+	@golangci-lint run ./...
 	@echo all code is linted
 
 format:
-	gofmt -w -s .
+	@gofmt -w -s .
 
 format-check:
-	gofmt -l .
+	@gofmt -l .
 
 run:
-	go run $(MAIN)
+	@go run $(MAIN)
 
 test:
-	go test -v ./...
+	@go test -v ./...
+
+test-cov:
+	@mkdir -p target/test
+	@go test -v -cover -coverprofile=./target/test/coverage.out ./...
 
 sbom: build
 	@mkdir -p target/sbom
-	cyclonedx-gomod bin -json -output ./target/sbom/nofox-$(VERSION).bom.json ./nofox
+	@cyclonedx-gomod bin -json -output ./target/sbom/nofox-$(VERSION).bom.json ./nofox
 
-.PHONY: all build clean lint format format-check run test sbom
+.PHONY: all build clean lint format format-check run test test-cov sbom
