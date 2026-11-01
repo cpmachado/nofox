@@ -1,6 +1,7 @@
 package nofox
 
 import (
+	"fmt"
 	"io"
 	"maps"
 	"testing"
@@ -141,6 +142,35 @@ func TestLexer_Lex(t *testing.T) {
 			}
 			if tt.wantErr {
 				t.Fatal("Lex() succeeded unexpectedly")
+			}
+		})
+	}
+}
+
+func TestLexer_String(t *testing.T) {
+	justAnEmitter := make(chan Token)
+	tests := []struct {
+		name     string // description of this test case
+		mappings map[rune]Token
+		emitter  chan Token
+		want     string
+	}{
+		{
+			name:    "default",
+			emitter: justAnEmitter,
+			want:    fmt.Sprintf("Lexer{Mappings: map[43:TokenIncrement 44:TokenRead 45:TokenDecrement 46:TokenPrint 60:TokenMoveLeft 62:TokenMoveRight 91:TokenLoopStart 93:TokenLoopEnd], Emitter: %v}", justAnEmitter),
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			l, err := NewLexer(tt.mappings, tt.emitter)
+			if err != nil {
+				t.Fatalf("could not construct receiver type: %v", err)
+			}
+			got := l.String()
+			// TODO: update the condition below to compare got with tt.want.
+			if got != tt.want {
+				t.Errorf("String() = %q, want %q", got, tt.want)
 			}
 		})
 	}

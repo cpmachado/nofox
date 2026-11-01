@@ -17,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Lex` migrated to be a function of `Lexer`
 - Updated dependency to go v1.27.3
 
+## Removed
+
+- `ErrDuplicatedToken` as it was used on dead code, as `map` can't have
+  duplicates.
+
 ## [0.0.3] - 2026-03-13
 
 ### Added

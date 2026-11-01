@@ -78,9 +78,6 @@ func validateMappings(mappings map[rune]Token) error {
 	}
 
 	for _, v := range mappings {
-		if exists := tracker[v]; exists {
-			return ErrDuplicatedToken
-		}
 		tracker[v] = true
 	}
 
