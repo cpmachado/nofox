@@ -82,6 +82,9 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				}
 			}
 		case NodeTypeRead:
+			if !v.WithinTape(v.ptr) {
+				return ErrInvalidIO
+			}
 			b := make([]byte, 1)
 			_, err := v.input.Read(b)
 			if err != nil {
@@ -93,7 +96,13 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				v.tape[v.ptr] = T(b[0])
 			}
 		case NodeTypePrint:
-			_, _ = fmt.Fprintf(v.output, "%c", rune(v.tape[v.ptr]))
+			x, found := v.ValueAt(v.ptr)
+
+			if !found {
+				return ErrInvalidIO
+			}
+
+			_, _ = fmt.Fprintf(v.output, "%c", rune(x))
 		}
 	}
 	return nil
