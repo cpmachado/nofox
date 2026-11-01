@@ -14,8 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Lex migrated to be a function of Lexer
-- Updated dependency to go v1.27.2
+- `Lex` migrated to be a function of `Lexer`
+- Updated dependency to go v1.27.3
 
 ## [0.0.3] - 2026-03-13
 
@@ -34,19 +34,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Tokens defined by a lexer
-- Parser implements very rudimentary ast
+- Parser implements very rudimentary AST
 - AST, lexer and VM exposed at root package
 
 ### Changed
 
 - Moved main.go to ./cmd/nofox/
-- Code executed by a vm
+- Code executed by a VM
 
 ## [0.0.1] - 2026-01-25
 
 ### Added
 
-- MVP implementation of a bf intepreter
+- MVP implementation of a bf interpreter
 
 [unreleased]: https://github.com/cpmachado/nofox/releases/compare/v0.0.3...HEAD
 [0.0.3]: https://github.com/cpmachado/nofox/releases/tag/v0.0.3
