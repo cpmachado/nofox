@@ -14,6 +14,7 @@ type Int interface {
 type VM[T Int] interface {
 	Execute(program AST) error
 	ValueAt(idx int) (v T, found bool)
+	WithinTape(idx int) bool
 	TapeSize() int
 	Input() io.Reader
 	Output() io.Writer
@@ -98,8 +99,12 @@ func (v *defaultVM[T]) Execute(p AST) error {
 	return nil
 }
 
+func (v *defaultVM[T]) WithinTape(idx int) bool {
+	return idx >= 0 && len(v.tape) > idx
+}
+
 func (v *defaultVM[T]) ValueAt(idx int) (T, bool) {
-	if v.ptr < 0 || len(v.tape) >= idx {
+	if !v.WithinTape(idx) {
 		return T(0), false
 	}
 	return v.tape[idx], true
