@@ -14,8 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- `Lex` migrated to be a function of `Lexer`
 - Updated dependency to go v1.27.3
+- `Lex` migrated to be a function of `Lexer`
+- Added `WithinTape` method to `VM` definition
+
+## Fixed
+
+- Validated tape boundaries and out of memory access emits `ErrInvalidMemoryAccess`
 
 ## Removed
 

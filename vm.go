@@ -14,6 +14,7 @@ type Int interface {
 type VM[T Int] interface {
 	Execute(program AST) error
 	ValueAt(idx int) (v T, found bool)
+	WithinTape(idx int) bool
 	TapeSize() int
 	Input() io.Reader
 	Output() io.Writer
@@ -64,6 +65,9 @@ func (v *defaultVM[T]) Execute(p AST) error {
 			}
 			v.ptr += nmove.Value
 		case NodeTypeIncrement:
+			if !v.WithinTape(v.ptr) {
+				return ErrInvalidMemoryAccess
+			}
 			ninc, ok := ins.(*NodeIncrement)
 			if !ok {
 				return ErrInvalidNode
@@ -81,6 +85,9 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				}
 			}
 		case NodeTypeRead:
+			if !v.WithinTape(v.ptr) {
+				return ErrInvalidMemoryAccess
+			}
 			b := make([]byte, 1)
 			_, err := v.input.Read(b)
 			if err != nil {
@@ -92,14 +99,24 @@ func (v *defaultVM[T]) Execute(p AST) error {
 				v.tape[v.ptr] = T(b[0])
 			}
 		case NodeTypePrint:
-			_, _ = fmt.Fprintf(v.output, "%c", rune(v.tape[v.ptr]))
+			x, found := v.ValueAt(v.ptr)
+
+			if !found {
+				return ErrInvalidMemoryAccess
+			}
+
+			_, _ = fmt.Fprintf(v.output, "%c", rune(x))
 		}
 	}
 	return nil
 }
 
+func (v *defaultVM[T]) WithinTape(idx int) bool {
+	return idx >= 0 && len(v.tape) > idx
+}
+
 func (v *defaultVM[T]) ValueAt(idx int) (T, bool) {
-	if v.ptr < 0 || len(v.tape) >= idx {
+	if !v.WithinTape(idx) {
 		return T(0), false
 	}
 	return v.tape[idx], true
