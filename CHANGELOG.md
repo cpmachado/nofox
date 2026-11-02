@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-02
+
 ### Added
 
 - Added `Lexer` type, and enabled different mappings to use as a lib.
@@ -58,7 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - MVP implementation of a bf interpreter
 
-[unreleased]: https://github.com/cpmachado/nofox/releases/compare/v0.0.3...HEAD
+[unreleased]: https://github.com/cpmachado/nofox/releases/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/cpmachado/nofox/releases/tag/v0.1.0
 [0.0.3]: https://github.com/cpmachado/nofox/releases/tag/v0.0.3
 [0.0.2]: https://github.com/cpmachado/nofox/releases/tag/v0.0.2
 [0.0.1]: https://github.com/cpmachado/nofox/releases/tag/v0.0.1
